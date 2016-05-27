@@ -1,33 +1,39 @@
 using UnityEngine;
+using Pathfinding.Serialization.JsonFx;
 using System.Collections;
 
-public class sketch : MonoBehaviour {
+public class Sketch : MonoBehaviour {
 
     public GameObject myPrefab;
+    string _WebsiteURL = "http://cutedoraemon.azurewebsites.net/tables/product?zumo-api-version=2.0.0";
 
-	// Use this for initialization
-	void Start () {
+    void Start () {
+        string jsonResponse = Request.GET(_WebsiteURL);
 
-        int totalCubes = 12;
+        if (string.IsNullOrEmpty(jsonResponse))
+        {
+            return;
+        }
 
-        int totalDistance = 5;
+        Product[] products = JsonReader.Deserialize<Product[]>(jsonResponse);
 
-        for ( int i =0; i<6; i++)
+        int totalCubes = products.Length;
+        int totalDistance = 10;
+        int i = 0;
+        foreach (Product product in products)
         {
             float perc = i / (float)totalCubes;
-            float x = perc*totalDistance;
-            float y = 5.0f;
+            i++;
+            float x = perc * totalDistance;
+            float y = 10.0f;
             float z = 0.0f;
-
-            var newCube = (GameObject)Instantiate(myPrefab, new Vector3(x, y, z), Quaternion.identity);
-            newCube.GetComponent<cubescript>().SetSize(1.0f-perc);
-            newCube.GetComponent<cubescript>().rotateSpeed =perc; //Random.value;
-        }
-       
-       
+            GameObject newCube = (GameObject)Instantiate(myPrefab, new Vector3( x, y, z), Quaternion.identity);
+            newCube.GetComponent<CubeCode>().SetSize((1.0f - perc) *2);
+            newCube.GetComponent<CubeCode>().RotateSpeed = perc;
+            newCube.GetComponentInChildren<TextMesh>().text = product.Segment;
+        }        
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
