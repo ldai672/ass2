@@ -4,25 +4,27 @@ using System.Collections;
 public class CubeCode : MonoBehaviour
 {
     public float RotateSpeed = 1.0f;
-    public Vector3 spinSpeed = Vector3.zero;
-    Vector3 spinSpeed = new Vector3(0, 1, 0);
+    public int SlideValue =1;
+    
+    Vector3 spinSpeed = new Vector3(0,0,0);
+    Vector3 spinAxis = Vector3.up;
         
     void Start()
     {
-        spinSpeed = new Vector3(Random.value, Random.value, Random.value);
+        spinSpeed = new Vector3(Random.value*Slidevalue, Random.value, Random.value);
         spinAxis = Vector3.up;
         spinAxis.x = .1f * (Random.value - Random.value);
     }
 
     public void SetSize(float size)
     {
-        this.transform.localScale = new Vector3(2.0f, 2.0f, 2.0f);
+        this.transform.localScale = new Vector3(size,size,size);
     }
 
     void Update()
     {
         this.transform.Rotate(spinSpeed);
-        this.transform.RotateAround(Vector3.zero, spinAxis, 1.0f);
+        this.transform.RotateAround(Vector3.zero, spinAxis, RotateSpeed);
     }
 }
 
